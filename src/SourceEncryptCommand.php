@@ -74,7 +74,13 @@ class SourceEncryptCommand extends Command
         File::deleteDirectory(base_path($destination));
         File::makeDirectory(base_path($destination));
 
-        $key = $this->option('key');
+        if (empty($this->option('key'))) {
+            $this->info('Key not found');
+        } else {
+            $key = $this->option('key');
+            $this->info('Key found ' . $key);
+        }
+        
         foreach ($sources as $source) {
             @File::makeDirectory($destination.'/'.File::dirname($source), 493, true);
 
