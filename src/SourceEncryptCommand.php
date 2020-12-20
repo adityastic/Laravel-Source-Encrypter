@@ -85,7 +85,7 @@ class SourceEncryptCommand extends Command
             $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(base_path($source)));
             foreach ($files as $file) {
                 $filePath = Str::replaceFirst(base_path(), '', $file->getRealPath());
-                self::encryptFile($filePath, $destination, $keyLength);
+                self::encryptFile($filePath, $destination, $key);
             }
         }
         $this->info('Encrypting Completed Successfully!');
