@@ -28,7 +28,7 @@ class SourceEncryptCommand extends Command
                 { --source= : Path(s) to encrypt }
                 { --destination= : Destination directory }
                 { --force : Force the operation to run when destination directory already exists }
-                { --keylength= : Encryption key length }';
+                { --key= : Encryption key }';
     /**
      * The console command description.
      *
@@ -79,11 +79,12 @@ class SourceEncryptCommand extends Command
         File::deleteDirectory(base_path($destination));
         File::makeDirectory(base_path($destination));
 
+        $key = $this->option('key');
         foreach ($sources as $source) {
             @File::makeDirectory($destination.'/'.File::dirname($source), 493, true);
 
             if (File::isFile($source)) {
-                self::encryptFile($source, $destination, $keyLength);
+                self::encryptFile($source, $destination, $key);
                 continue;
             }
             $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(base_path($source)));
@@ -98,9 +99,8 @@ class SourceEncryptCommand extends Command
         return 0;
     }
 
-    private static function encryptFile($filePath, $destination, $keyLength)
+    private static function encryptFile($filePath, $destination, $key)
     {
-        $key = Str::random($keyLength);
         if (File::isDirectory(base_path($filePath))) {
             if (!File::exists(base_path($destination.$filePath))) {
                 File::makeDirectory(base_path("$destination/$filePath"), 493, true);
@@ -118,7 +118,7 @@ class SourceEncryptCommand extends Command
         $fileContents = File::get(base_path($filePath));
 
         $prepend = "<?php
-bolt_decrypt( __FILE__ , '$key'); return 0;
+bolt_decrypt( __FILE__ , get_cfg_var('SERVICE_KEY')); return 0;
 ##!!!##";
         $pattern = '/\<\?php/m';
         preg_match($pattern, $fileContents, $matches);
