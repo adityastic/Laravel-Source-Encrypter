@@ -61,11 +61,6 @@ class SourceEncryptCommand extends Command
         } else {
             $destination = $this->option('destination');
         }
-        if (empty($this->option('keylength'))) {
-            $keyLength = config('source-encrypter.key_length', 6);
-        } else {
-            $keyLength = $this->option('keylength');
-        }
 
         if (!$this->option('force')
             && File::exists(base_path($destination))
