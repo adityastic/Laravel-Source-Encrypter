@@ -16,7 +16,6 @@
     "php": ">=7.1",
     "illuminate/console": "^5.5|^6|^7|^8",
     "illuminate/support": "^5.5|^6|^7|^8",
-    "ext-bolt": "*"
   },
   "description": "Laravel Source Encrypter",
   "license": "MIT",
